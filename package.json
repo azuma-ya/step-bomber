@@ -6,12 +6,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "serve": "bun src/server.ts",
+    "check": "biome check --white *"
   },
   "dependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "boardgame.io": "^0.50.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "esm": "^3.2.25",
+    "lucide-react": "^0.477.0",
+    "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.2.1"
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "typescript": "^5",
