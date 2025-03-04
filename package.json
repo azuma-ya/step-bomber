@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "serve": "bun src/server.ts",
+    "serve": "bun src/server/index.ts",
     "check": "biome check --white *"
   },
   "dependencies": {
