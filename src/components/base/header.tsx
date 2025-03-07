@@ -2,6 +2,7 @@ import { Container } from "../layout/container";
 import { MainSidebarButton } from "../sheet/main-sidebar-button";
 import { ThemeToggleButton } from "../ui/theme-toggle-button";
 import { Navigation } from "./navigation";
+import { RuleModal } from "./rule-modal";
 
 export const Header = () => {
   return (
@@ -13,6 +14,7 @@ export const Header = () => {
         <MainSidebarButton />
         <Navigation className="hidden md:flex" />
         <div className="flex items-center gap-2">
+          <RuleModal />
           <ThemeToggleButton variant="ghost" />
         </div>
       </Container>

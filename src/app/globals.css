@@ -160,4 +160,140 @@
   .bgio-client {
     @apply size-full;
   }
+
+  .markdown {
+    @apply text-foreground leading-normal break-words text-base;
+
+    > * {
+      @apply mb-2;
+
+      &:last-child {
+        @apply mb-0;
+      }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply mt-8 my-2 font-semibold relative;
+
+      &:hover > a {
+        @apply opacity-100;
+      }
+
+      &:first-child {
+        @apply mt-0;
+      }
+    }
+
+    h1,
+    h2 {
+      @apply text-xl leading-tight;
+    }
+
+    h3 {
+      @apply text-lg leading-snug;
+    }
+
+    h4,
+    h5,
+    h6 {
+      @apply text-base leading-none;
+    }
+
+    p {
+      @apply mt-4;
+    }
+
+    li {
+      + li {
+        @apply mt-1;
+      }
+
+      > p + p {
+        @apply mt-6;
+      }
+    }
+
+    strong {
+      @apply font-semibold;
+
+      a {
+        @apply font-bold;
+      }
+    }
+
+    a {
+      @apply font-semibold underline;
+    }
+
+    blockquote {
+      @apply border-l-4 border-border pl-4 pr-4 text-muted-foreground;
+    }
+
+    ul {
+      @apply pl-8 list-(--my-marker);
+    }
+
+    ol {
+      @apply pl-8 list-decimal;
+    }
+
+    kbd {
+      @apply inline-block rounded border px-1 py-1 align-middle font-normal font-mono shadow;
+    }
+
+    table {
+      @apply border-border overflow-x-auto whitespace-nowrap block;
+    }
+
+    th {
+      @apply border py-1 px-3 bg-muted;
+    }
+
+    td {
+      @apply border py-1 px-3;
+    }
+
+    hr {
+      @apply my-4;
+    }
+
+    code {
+      @apply bg-accent border border-border rounded-md px-2 py-0.5;
+    }
+
+    pre {
+      @apply overflow-auto;
+
+      code {
+        @apply p-0 bg-transparent border-none;
+      }
+    }
+
+    .flex > * {
+      @apply flex-1 min-w-0;
+    }
+
+    .contains-task-list {
+      @apply list-none;
+    }
+
+    > .contains-task-list {
+      @apply pl-0;
+    }
+  }
+
+  .defaultStyles {
+    pre {
+      @apply rounded-md!;
+    }
+  }
+
+  .katex-display {
+    @apply overflow-x-auto px-1;
+  }
 }
