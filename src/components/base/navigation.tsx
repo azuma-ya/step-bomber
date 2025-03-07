@@ -16,6 +16,10 @@ const routes = [
     name: "Home",
     href: "/",
   },
+  {
+    name: "Rooms",
+    href: "/rooms",
+  },
 ];
 
 export const Navigation = ({

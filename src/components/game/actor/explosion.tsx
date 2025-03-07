@@ -1,5 +1,5 @@
 import { map } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Particle = {
   id: number;
@@ -12,30 +12,36 @@ type Particle = {
 
 export const Explosion = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const colors = [
-      "#FEF5BD",
-      "#F8E152",
-      "#FF8E3A",
-      "#D9E0E6",
-      "#D9E0E6",
-      "#ff0000",
-      "#ff4500",
-      "#ff6347",
-      "#c0c0c0",
-      "#999999",
-      "#ffffff",
+      "#FF4500", // オレンジレッド
+      "#FF6347", // トマト
+      "#FF8C00", // ダークオレンジ
+      "#FFA500", // オレンジ
+      "#FFD700", // ゴールド
+      "#FFFF00", // イエロー
+      "#FFFACD", // レモンシフォン（柔らかい光）
+      "#FFF5EE", // シーシェル（ほのかな明るさ）
+      "#FF7F50", // コーラル
+      "#FFDAB9", // ピーチパフ
     ];
-    const particleCount = 30;
+    const particleCount = 50;
     const newParticles: Particle[] = [];
 
+    const baseSize = (containerRef?.current?.clientWidth ?? 50) / 10;
+
     for (let i = 0; i < particleCount; i++) {
-      const size = Math.random() * 15 + 5;
+      const size = Math.random() * baseSize + 5;
       const color = colors[Math.floor(Math.random() * colors.length)];
       const temp = Math.random() * Math.PI * 2;
-      const targetX = Math.cos(temp) * 50 + map(Math.random(), 0, 1, -50, 50);
-      const targetY = Math.sin(temp) * 50 + map(Math.random(), 0, 1, -50, 50);
+      const targetX =
+        Math.cos(temp) * baseSize +
+        map(Math.random(), 0, 1, -baseSize * 10, baseSize * 10);
+      const targetY =
+        Math.sin(temp) * baseSize +
+        map(Math.random(), 0, 1, -baseSize * 10, baseSize * 10);
       const duration = Math.random() * 1000 + 500;
 
       newParticles.push({
@@ -58,7 +64,7 @@ export const Explosion = () => {
   }, []);
 
   return (
-    <div className="relative size-full">
+    <div className="relative size-full" ref={containerRef}>
       {particles.map((particle) => (
         <div
           key={particle.id}

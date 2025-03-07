@@ -20,6 +20,6 @@ export const getOpponentPlayerID = (playerID: PlayerID): PlayerID => {
   return playerID === PlayerID.BLACK ? PlayerID.WHITE : PlayerID.BLACK;
 };
 
-export const getPlayerID = (turn: string): PlayerID => {
+export const getPlayerID = (turn: string | undefined): PlayerID => {
   return turn as "0" | "1" as PlayerID;
 };

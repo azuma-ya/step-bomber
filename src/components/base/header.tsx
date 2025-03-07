@@ -1,4 +1,5 @@
 import { Container } from "../layout/container";
+import { MainSidebarButton } from "../sheet/main-sidebar-button";
 import { ThemeToggleButton } from "../ui/theme-toggle-button";
 import { Navigation } from "./navigation";
 
@@ -9,6 +10,7 @@ export const Header = () => {
         maxWidth="xl"
         className="flex items-center justify-between h-full"
       >
+        <MainSidebarButton />
         <Navigation className="hidden md:flex" />
         <div className="flex items-center gap-2">
           <ThemeToggleButton variant="ghost" />

@@ -5,7 +5,9 @@ import { useEffect, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { push, ref, set } from "firebase/database";
 import { collection, doc, setDoc } from "firebase/firestore";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -20,12 +22,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { Room } from "@/features/room/types/room";
+import { useData } from "@/hooks/use-data";
 import { auth, db, store } from "@/lib/firebase";
-import Link from "next/link";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useListVals } from "react-firebase-hooks/database";
-import { useDocumentData } from "react-firebase-hooks/firestore";
 
 const formSchema = z.object({
   name: z
@@ -38,11 +36,8 @@ const App = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [authUser] = useAuthState(auth);
-  const [user] = useDocumentData(
-    authUser ? doc(store, "users", authUser.uid) : null,
-  );
-
-  const [rooms] = useListVals<Room>(ref(db, "rooms"));
+  const user = useData((state) => state.user);
+  const rooms = useData((state) => state.rooms);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,6 +59,7 @@ const App = () => {
         id: authUser.uid,
         name: values.name,
         image: authUser.photoURL,
+        points: 0,
       });
     });
   };
@@ -82,14 +78,14 @@ const App = () => {
           currentPlayer: null,
         },
       });
-      router.push(`/${key}`);
+      router.push(`/rooms/${key}`);
     });
   };
 
   return (
-    <Container className="h-[calc(100vh-var(--header-height)-var(--footer-height))] flex items-center justify-center flex-col gap-6 w-[350px]">
+    <Container className="h-[calc(100vh-var(--header-height)-var(--footer-height))] flex items-center justify-center flex-col gap-6 md:w-[350px]">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <FormField
             control={form.control}
             name="name"
@@ -124,7 +120,7 @@ const App = () => {
           .map((room) => (
             <li key={room.id}>
               <Button variant="outline" className="w-full" asChild>
-                <Link href={`/${room.id}`}>{room.host}</Link>
+                <Link href={`/rooms/${room.id}`}>{room.id}</Link>
               </Button>
             </li>
           ))}

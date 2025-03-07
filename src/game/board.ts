@@ -1,5 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 
+import type { GameConfig } from "@/config/game";
 import { type Player, PlayerID, getOpponentPlayerID } from "@/types/player";
 import type { Position } from "@/types/position";
 import type { MoveDirection } from ".";
@@ -22,50 +23,41 @@ const getMoveDiff = (direction: MoveDirection): Position => {
 
 export interface BoardState {
   cells: string[][];
-  bombs: Bomb[];
   players: {
     [PlayerID.BLACK]: Player;
     [PlayerID.WHITE]: Player;
   };
-  fire: Position | undefined;
-  isPlaceable: boolean;
+  fire: Bomb | undefined;
   gridSize: number;
-  cellSize: number;
 }
 
-export const createBoard = (
-  gridSize: number,
-  cellSize: number,
-): BoardState => ({
-  cells: createCells(gridSize, [
-    "#7cfc00",
-    "#00ff00",
-    "#adff2f",
-    "#eee8aa",
-    "#7cfc00",
-  ]),
-  bombs: [],
+export const createBoard = (config: typeof GameConfig): BoardState => ({
+  cells: createCells(config.GRID_SIZE, config.GRID_COLORS),
   players: {
     [PlayerID.BLACK]: {
       id: PlayerID.BLACK,
       color: "#000",
-      position: { row: 0, col: 0 },
+      position: {
+        row: Math.floor(config.GRID_SIZE / 2) - 1,
+        col: Math.floor(config.GRID_SIZE / 2) - 1,
+      },
     },
     [PlayerID.WHITE]: {
       id: PlayerID.WHITE,
       color: "#fff",
-      position: { row: gridSize - 1, col: gridSize - 1 },
+      position: {
+        row: Math.floor(config.GRID_SIZE / 2) + 1,
+        col: Math.floor(config.GRID_SIZE / 2) + 1,
+      },
     },
   },
   fire: undefined,
-  isPlaceable: true,
-  gridSize,
-  cellSize,
+  gridSize: config.GRID_SIZE,
 });
 
 const createCells = (
   gridSize: number,
-  colors: string[] = ["#000"],
+  colors: readonly string[] = ["#000"],
 ): string[][] =>
   new Array(gridSize)
     .fill(0)

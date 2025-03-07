@@ -1,38 +1,24 @@
-# step-bommer
+# Step Bommer
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## ゲームルール
 
-## Getting Started
+### 概要
+Step Bommerは、オンラインマルチプレイヤー爆弾アクションゲームです。プレイヤーは爆弾を設置して相手を倒すことを目指します。
 
-First, run the development server:
+- 毎ターンに爆弾を1つ設置します
+- 最初のターンは移動は5回までしかできません
+- 爆弾は設置したターンは踏んでも爆発しません
+- 爆弾は自分や相手のものにかかわらず、踏むと爆発します。
+- 爆弾は十字に爆発し、同じ「列」、「行」にいても爆発の影響を受けてしまいます。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 遊び方
+1. ルームを作成するか、既存のルームに参加します
+2. QRコードを使って他のプレイヤーを招待できます
+3. 全員の準備が整ったらゲームスタート
+4. 矢印キーで移動し、スペースキーで爆弾を設置します
+5. 爆弾は一定時間後に爆発し、爆風に当たったプレイヤーは負けとなります
+6. 最後まで生き残ったプレイヤーの勝利です
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 注意点
+- 自分の設置した爆弾の爆風でも負けになります
+- 一度に設置できる爆弾の数には制限があります
