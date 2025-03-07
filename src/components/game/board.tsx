@@ -164,6 +164,7 @@ export const Board = ({ G, ctx, moves, events, playerID }: Props) => {
                       fire &&
                       (fire.position.row === i || fire.position.col === j)
                     }
+                    playerID={playerID}
                   />
                 ))}
               </tr>

@@ -12,6 +12,10 @@ export interface GameState {
   board: BoardState;
   players: Record<PlayerID, { bombs: Bomb[]; isPlaceable: boolean }>;
   moveCount: number;
+  config: {
+    gridSize: number;
+    isVisibleBombs: boolean;
+  };
 }
 
 export const createGame = ({

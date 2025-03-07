@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 
 import { useData } from "@/hooks/use-data";
 import { db } from "@/lib/firebase";
@@ -46,55 +46,41 @@ const RoomIdPage = () => {
     }
   }, [user, players, roomId, isLeaving, room]);
 
-  useEffect(() => {
-    const handleRouteChange = () => {
-      if (room?.players?.[user?.id ?? ""] && isLeaving) {
-        if (room?.host === user?.id) {
-          remove(ref(db, `rooms/${room.id}`));
-        } else {
-          remove(ref(db, `rooms/${room.id}/players/${user?.id}`));
-        }
-        setIsLeaving(false);
+  const handleRouteChange = useCallback(() => {
+    if (room?.players?.[user?.id ?? ""] && isLeaving) {
+      if (room?.host === user?.id) {
+        remove(ref(db, `rooms/${room.id}`));
+      } else {
+        remove(ref(db, `rooms/${room.id}/players/${user?.id}`));
       }
-    };
+      setIsLeaving(false);
+    }
+  }, [room, user, isLeaving]);
 
-    const handleRouteBack = () => {
-      handleRouteChange();
-      history.back();
-    };
+  useEffect(() => {
+    window.addEventListener("popstate", handleRouteChange);
+    return () => {};
+  }, [handleRouteChange]);
 
-    window.history.pushState(null, "", window.location.pathname);
-    window.addEventListener("popstate", handleRouteBack);
-
+  useEffect(() => {
     const originalPush = router.push;
     const originalReplace = router.replace;
-    const originalBack = router.back;
 
     router.push = (...args) => {
       handleRouteChange();
-      history.back();
       return originalPush.apply(router, args);
     };
 
     router.replace = (...args) => {
       handleRouteChange();
-      history.back();
       return originalReplace.apply(router, args);
-    };
-
-    router.back = () => {
-      handleRouteChange();
-      history.back();
-      return originalBack.apply(router);
     };
 
     return () => {
       router.push = originalPush;
       router.replace = originalReplace;
-      router.back = originalBack;
-      window.removeEventListener("popstate", handleRouteBack);
     };
-  }, [room, user, router, isLeaving]);
+  }, [handleRouteChange, router]);
 
   if (!room) {
     return (

@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Container } from "@/components/layout/container";
+import { ModeModalButton } from "@/components/modal/mode-modal";
+import { RoomItem } from "@/components/room-item";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useData } from "@/hooks/use-data";
 import { auth, db, store } from "@/lib/firebase";
+import type { Config } from "@/types/room";
 
 export const runtime = "edge";
 
@@ -74,7 +77,7 @@ const App = () => {
     });
   };
 
-  const onCreateRoom = () => {
+  const handleCreateRoom = (config: Config) => {
     if (!user) return;
 
     const key = push(ref(db, "rooms")).key;
@@ -87,6 +90,7 @@ const App = () => {
           status: "waiting",
           currentPlayer: null,
         },
+        config,
       });
       router.push(`/rooms/${key}`);
     });
@@ -116,22 +120,22 @@ const App = () => {
           />
         </form>
       </Form>
-      <Button
+      <ModeModalButton
         type="button"
         className="w-full"
         disabled={isPending || !user}
-        onClick={onCreateRoom}
+        onCreateRoom={handleCreateRoom}
       >
         部屋を作成する
-      </Button>
+      </ModeModalButton>
       <ul className="w-full space-y-1">
         {rooms
           ?.filter((room) => room.gameState.status === "waiting")
           .map((room) => (
             <li key={room.id}>
-              <Button variant="outline" className="w-full" asChild>
-                <Link href={`/rooms/${room.id}`}>{room.id}</Link>
-              </Button>
+              <Link href={`/rooms/${room.id}`}>
+                <RoomItem data={room} />
+              </Link>
             </li>
           ))}
       </ul>

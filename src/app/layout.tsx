@@ -21,8 +21,7 @@ const notoSansJP = Noto_Sans_JP({
 
 export const metadata: Metadata = {
   title: "Step Bunmer",
-  description:
-    "Step Bunmer is a psychological game where you try to find the location of your opponent's bomb while trying to make them step on your bomb. The game is played on a grid, and players take turns placing bombs on the grid. The goal is to be the first player to get rid of all of your bombs.",
+  description: "心理ボードゲーム。爆弾を設置して相手に踏ませよ！",
 };
 
 export default function RootLayout({

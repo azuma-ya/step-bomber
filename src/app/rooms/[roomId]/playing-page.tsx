@@ -23,7 +23,7 @@ const PlayingPage = ({ room }: Props) => {
   const GameView = Client({
     game: createGame({
       initialState: {
-        board: createBoard(GameConfig),
+        board: createBoard({ ...GameConfig, GRID_SIZE: room.config.gridSize }),
         players: {
           [PlayerID.BLACK]: {
             bombs: [],
@@ -34,6 +34,7 @@ const PlayingPage = ({ room }: Props) => {
             isPlaceable: true,
           },
         },
+        config: room.config,
         moveCount: 0,
       },
     }),
