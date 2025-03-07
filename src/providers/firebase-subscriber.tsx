@@ -2,17 +2,22 @@
 
 import { useEffect } from "react";
 
+import { onValue, ref } from "firebase/database";
+import { doc, onSnapshot } from "firebase/firestore";
+import { usePathname } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import { useAuthModal } from "@/hooks/use-auth-modal";
 import { useData } from "@/hooks/use-data";
 import { auth, db, store } from "@/lib/firebase";
 import type { User } from "@/types/user";
-import { onValue, ref } from "firebase/database";
-import { doc, onSnapshot } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 export const FirebaseSubscriber = () => {
   const [authUser] = useAuthState(auth);
   const setRooms = useData((state) => state.setRooms);
   const setUser = useData((state) => state.setUser);
+  const onOpen = useAuthModal((state) => state.onOpen);
+  const pathname = usePathname();
 
   // Rooms subscription
   useEffect(() => {
@@ -33,7 +38,10 @@ export const FirebaseSubscriber = () => {
     const unsubscribe = onSnapshot(
       doc(store, "users", authUser.uid),
       (snapshot) => {
-        if (!snapshot.exists()) return;
+        if (!snapshot.exists()) {
+          if (pathname === "/") return;
+          return onOpen();
+        }
         const user = snapshot.data() as User;
         setUser(user);
       },
@@ -42,7 +50,7 @@ export const FirebaseSubscriber = () => {
     return () => {
       unsubscribe();
     };
-  }, [authUser?.uid, setUser]);
+  }, [authUser?.uid, setUser, onOpen, pathname]);
 
   return null;
 };

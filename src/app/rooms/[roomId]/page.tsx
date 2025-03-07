@@ -2,12 +2,11 @@
 
 import { useEffect, useState, useTransition } from "react";
 
+import { useData } from "@/hooks/use-data";
+import { db } from "@/lib/firebase";
 import { ref, remove, update } from "firebase/database";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-
-import { useData } from "@/hooks/use-data";
-import { db } from "@/lib/firebase";
 import PlayingPage from "./playing-page";
 import WaitingPage from "./waiting-page";
 
@@ -20,8 +19,6 @@ const RoomIdPage = () => {
   const rooms = useData((state) => state.rooms);
   const user = useData((state) => state.user);
   const [isLeaving, setIsLeaving] = useState(true);
-
-  console.log("room id page rendering");
 
   const room = rooms?.find((room) => room.id === roomId);
   const players = Object.values(room?.players ?? {});
