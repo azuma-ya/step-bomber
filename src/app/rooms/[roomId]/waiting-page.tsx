@@ -23,7 +23,7 @@ interface Props {
   isPending: boolean;
 }
 
-const Waiting = ({ room, onStart, isPending }: Props) => {
+const WaitingPage = ({ room, onStart, isPending }: Props) => {
   const players = Object.values(room.players ?? {});
   const user = useData((state) => state.user);
 
@@ -83,4 +83,4 @@ const Waiting = ({ room, onStart, isPending }: Props) => {
   );
 };
 
-export default Waiting;
+export default WaitingPage;

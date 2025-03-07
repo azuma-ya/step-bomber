@@ -4,7 +4,7 @@ import { useEffect, useTransition } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { push, ref, set } from "firebase/database";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -54,15 +54,23 @@ const App = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!authUser) return;
-    const userCollectionRef = collection(store, "users");
-    const addDocRef = doc(userCollectionRef, authUser.uid);
+    const ref = doc(collection(store, "users"), authUser.uid);
+    if (user) {
+      startTransition(async () => {
+        await updateDoc(ref, {
+          name: values.name,
+        });
+      });
+      return;
+    }
     startTransition(async () => {
-      await setDoc(addDocRef, {
+      await setDoc(ref, {
         id: authUser.uid,
         name: values.name,
         image: authUser.photoURL,
         points: 0,
       });
+      window.location.reload();
     });
   };
 
@@ -98,7 +106,7 @@ const App = () => {
                   <div className="flex gap-2 items-center">
                     <Input placeholder="ニックネームを入力" {...field} />
                     <Button type="submit" disabled={isPending} className="">
-                      変更する
+                      {user ? "変更する" : "作成する"}
                     </Button>
                   </div>
                 </FormControl>
@@ -111,7 +119,7 @@ const App = () => {
       <Button
         type="button"
         className="w-full"
-        disabled={isPending}
+        disabled={isPending || !user}
         onClick={onCreateRoom}
       >
         部屋を作成する

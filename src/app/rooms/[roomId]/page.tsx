@@ -8,8 +8,8 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useData } from "@/hooks/use-data";
 import { db } from "@/lib/firebase";
-import Playing from "./playing";
-import Waiting from "./waiting";
+import PlayingPage from "./playing-page";
+import WaitingPage from "./waiting-page";
 
 export const runtime = "edge";
 
@@ -110,10 +110,10 @@ const RoomIdPage = () => {
   switch (room?.gameState.status) {
     case "waiting":
       return (
-        <Waiting room={room} onStart={handleStart} isPending={isPending} />
+        <WaitingPage room={room} onStart={handleStart} isPending={isPending} />
       );
     case "playing":
-      return <Playing room={room} />;
+      return <PlayingPage room={room} />;
     default:
       return null;
   }

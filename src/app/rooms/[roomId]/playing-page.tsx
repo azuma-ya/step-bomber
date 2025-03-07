@@ -17,7 +17,7 @@ interface Props {
   room: Room;
 }
 
-const Playing = ({ room }: Props) => {
+const PlayingPage = ({ room }: Props) => {
   const user = useData((state) => state.user);
 
   const GameView = Client({
@@ -53,4 +53,4 @@ const Playing = ({ room }: Props) => {
   );
 };
 
-export default Playing;
+export default PlayingPage;
