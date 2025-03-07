@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { useData } from "@/hooks/use-data";
-import Link from "next/link";
+
+export const runtime = "edge";
 
 const RoomListPage = () => {
   const rooms = useData((state) => state.rooms);

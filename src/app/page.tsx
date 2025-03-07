@@ -25,6 +25,8 @@ import { Input } from "@/components/ui/input";
 import { useData } from "@/hooks/use-data";
 import { auth, db, store } from "@/lib/firebase";
 
+export const runtime = "edge";
+
 const formSchema = z.object({
   name: z
     .string()

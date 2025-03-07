@@ -11,6 +11,8 @@ import { db } from "@/lib/firebase";
 import Playing from "./playing";
 import Waiting from "./waiting";
 
+export const runtime = "edge";
+
 const RoomIdPage = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
