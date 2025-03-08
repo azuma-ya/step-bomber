@@ -7,11 +7,7 @@ interface Props {
   title?: string;
 }
 
-export const OgpImage = ({
-  src,
-  size,
-  title = "Azuma-ya's Portfolio",
-}: Props) => {
+export const OgpImage = ({ src, size, title }: Props) => {
   return (
     <div
       style={{
