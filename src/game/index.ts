@@ -1,6 +1,7 @@
 import type { Game as BoardGameIOGame } from "boardgame.io";
-import { PlayerView } from "boardgame.io/core";
+import { PlayerView, TurnOrder } from "boardgame.io/core";
 
+import { shuffleArray } from "@/lib/utils";
 import { PlayerID, getPlayerID } from "@/types/player";
 import { type BoardState, movePlayer } from "./board";
 import { type Bomb, activateBombs, checkBombFire, placeBomb } from "./bomb";
@@ -29,6 +30,8 @@ export const createGame = ({
   minPlayers: 2,
 
   turn: {
+    order: TurnOrder.CUSTOM(shuffleArray([PlayerID.BLACK, PlayerID.WHITE])),
+
     onBegin: ({ G, ctx }) => {
       G.moveCount = 0;
       G.players[getPlayerID(ctx.currentPlayer)].isPlaceable = true;

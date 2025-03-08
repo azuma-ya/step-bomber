@@ -14,6 +14,7 @@ import { IconSelectButton } from "@/components/icon-select";
 import { Container } from "@/components/layout/container";
 import { ModeModalButton } from "@/components/modal/mode-modal";
 import { RoomItem } from "@/components/room-item";
+import { AnimatedList } from "@/components/ui/animated-list";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -101,77 +102,78 @@ const App = () => {
 
   return (
     <Container className="h-[calc(100vh-var(--header-height)-var(--footer-height))] flex items-center justify-center flex-col gap-6 md:w-[350px]">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full flex gap-6 flex-col items-start"
-        >
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormControl>
-                  <IconSelectButton
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full size-min"
-                    onSelectIcon={(icon: string) => {
-                      field.onChange(icon);
-                    }}
-                  >
-                    <Avatar className="size-16">
-                      <AvatarImage src={field.value} />
-                      <AvatarFallback className="text-xl">
-                        {user?.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </IconSelectButton>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>ニックネーム</FormLabel>
-                <FormControl>
-                  <div className="flex gap-2 items-center">
-                    <Input placeholder="ニックネームを入力" {...field} />
-                    <Button type="submit" disabled={isPending} className="">
-                      {user ? "変更する" : "作成する"}
-                    </Button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
-      <ModeModalButton
-        type="button"
-        className="w-full"
-        disabled={isPending || !user}
-        onCreateRoom={handleCreateRoom}
-      >
-        部屋を作成する
-      </ModeModalButton>
-      <ul className="w-full space-y-1">
+      <AnimatedList className="w-full" skipInitialAnimationIndexes={[0]}>
+        <div className="w-full space-y-6">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full flex gap-6 flex-col items-start"
+            >
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <IconSelectButton
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full size-min"
+                        onSelectIcon={(icon: string) => {
+                          field.onChange(icon);
+                        }}
+                      >
+                        <Avatar className="size-16">
+                          <AvatarImage src={field.value} />
+                          <AvatarFallback className="text-xl">
+                            {user?.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                      </IconSelectButton>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>ニックネーム</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center">
+                        <Input placeholder="ニックネームを入力" {...field} />
+                        <Button type="submit" disabled={isPending} className="">
+                          {user ? "変更する" : "作成する"}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+          <ModeModalButton
+            type="button"
+            className="w-full"
+            disabled={isPending || !user}
+            onCreateRoom={handleCreateRoom}
+            text="募集する"
+          >
+            部屋を作成する
+          </ModeModalButton>
+        </div>
         {rooms
           ?.filter((room) => room.gameState.status === "waiting")
           .slice(0, 5)
           .map((room) => (
-            <li key={room.id}>
-              <Link href={`/rooms/${room.id}`}>
-                <RoomItem data={room} />
-              </Link>
-            </li>
+            <Link key={room.id} href={`/rooms/${room.id}`}>
+              <RoomItem data={room} />
+            </Link>
           ))}
-      </ul>
+      </AnimatedList>
     </Container>
   );
 };

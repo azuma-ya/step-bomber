@@ -10,6 +10,7 @@ import type { Config } from "@/types/room";
 import { Button, type buttonVariants } from "../ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -19,6 +20,7 @@ import {
 } from "../ui/dialog";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
@@ -33,10 +35,12 @@ import { Switch } from "../ui/switch";
 export const ModeModalButton = ({
   children,
   onCreateRoom,
+  text,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     onCreateRoom: (config: Config) => void;
+    text: string;
   }) => {
   const isMobile = useIsMobile();
 
@@ -59,16 +63,22 @@ export const ModeModalButton = ({
               グリッドサイズ、爆弾の表示を設定できます
             </DialogDescription>
           </DrawerHeader>
-          <Form
-            gridSize={gridSize}
-            setGridSize={setGridSize}
-            isVisibleBombs={isVisibleBombs}
-            setIsVisibleBombs={setIsVisibleBombs}
-          />
+          <div className="px-4">
+            <Form
+              gridSize={gridSize}
+              setGridSize={setGridSize}
+              isVisibleBombs={isVisibleBombs}
+              setIsVisibleBombs={setIsVisibleBombs}
+            />
+          </div>
           <DrawerFooter>
-            <Button onClick={() => onCreateRoom({ gridSize, isVisibleBombs })}>
-              募集する
-            </Button>
+            <DrawerClose asChild>
+              <Button
+                onClick={() => onCreateRoom({ gridSize, isVisibleBombs })}
+              >
+                {text}
+              </Button>
+            </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -94,9 +104,11 @@ export const ModeModalButton = ({
           setIsVisibleBombs={setIsVisibleBombs}
         />
         <DialogFooter>
-          <Button onClick={() => onCreateRoom({ gridSize, isVisibleBombs })}>
-            募集する
-          </Button>
+          <DialogClose asChild>
+            <Button onClick={() => onCreateRoom({ gridSize, isVisibleBombs })}>
+              {text}
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -115,7 +127,7 @@ const Form = ({
   setIsVisibleBombs: (isVisibleBombs: boolean) => void;
 }) => {
   return (
-    <div className="px-4 space-y-4">
+    <div className="space-y-4">
       <div className="space-y-2">
         <Label>グリッドサイズ</Label>
         <div className="flex items-center gap-2">
@@ -135,7 +147,7 @@ const Form = ({
         </div>
       </div>
       <div className="space-y-2">
-        <Label>爆弾の表示</Label>
+        <Label>自分の爆弾の表示</Label>
         <div className="flex items-center justify-between gap-2">
           <Switch
             checked={isVisibleBombs}

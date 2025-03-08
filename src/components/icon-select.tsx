@@ -45,7 +45,7 @@ export const IconSelectButton = ({
       <PopoverTrigger asChild>
         <Button {...props}>{children}</Button>
       </PopoverTrigger>
-      <PopoverContent className="max-h-1/3 space-y-2">
+      <PopoverContent className="max-h-1/3 space-y-2 mx-4">
         <p className="text-muted-foreground text-base">Icons</p>
         <div className="grid grid-cols-4 gap-2 place-items-center">
           {icons.map((icon) => (
@@ -58,7 +58,7 @@ export const IconSelectButton = ({
             >
               <Avatar className="size-12">
                 <AvatarImage src={`/icons/${icon}.png`} />
-                <AvatarFallback>{icon}</AvatarFallback>
+                <AvatarFallback>{icon.slice(7)}</AvatarFallback>
               </Avatar>
             </Button>
           ))}

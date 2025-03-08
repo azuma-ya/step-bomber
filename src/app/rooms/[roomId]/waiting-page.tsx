@@ -1,8 +1,12 @@
 "use client";
 
-import { ClipboardCopy, QrCodeIcon } from "lucide-react";
+import { useTransition } from "react";
+
+import { ref, update } from "firebase/database";
+import { ClipboardCopy, QrCodeIcon, Settings } from "lucide-react";
 
 import QRCode from "@/components/base/qr-code";
+import { ModeModalButton } from "@/components/modal/mode-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +19,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useData } from "@/hooks/use-data";
-import type { Room } from "@/types/room";
+import { db } from "@/lib/firebase";
+import type { Config, Room } from "@/types/room";
 
 interface Props {
   room: Room;
@@ -26,8 +31,15 @@ interface Props {
 const WaitingPage = ({ room, onStart, isPending }: Props) => {
   const players = Object.values(room.players ?? {});
   const user = useData((state) => state.user);
+  const [isPendingConfig, startTransition] = useTransition();
 
   const url = window?.location.href;
+
+  const handleChengeConfig = (config: Config) => {
+    startTransition(async () => {
+      await update(ref(db, `rooms/${room.id}/config`), config);
+    });
+  };
 
   return (
     <div className="space-y-8">
@@ -72,13 +84,29 @@ const WaitingPage = ({ room, onStart, isPending }: Props) => {
           </li>
         ))}
       </ul>
-      <Button
-        className="ms-auto block"
-        onClick={onStart}
-        disabled={isPending || players.length < 2 || room.host !== user?.id}
-      >
-        Start
-      </Button>
+      <div className="flex items-center gap-2 justify-end">
+        <Button
+          className="px-16"
+          onClick={onStart}
+          disabled={
+            isPending ||
+            isPendingConfig ||
+            players.length < 2 ||
+            room.host !== user?.id
+          }
+        >
+          Start
+        </Button>
+        <ModeModalButton
+          disabled={isPendingConfig}
+          variant="outline"
+          size="icon"
+          text="変更する"
+          onCreateRoom={handleChengeConfig}
+        >
+          <Settings />
+        </ModeModalButton>
+      </div>
     </div>
   );
 };
