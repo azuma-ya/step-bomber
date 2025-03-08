@@ -98,10 +98,11 @@ const WaitingPage = ({ room, onStart, isPending }: Props) => {
           Start
         </Button>
         <ModeModalButton
-          disabled={isPendingConfig}
+          disabled={isPendingConfig || room.host !== user?.id}
           variant="outline"
           size="icon"
           text="変更する"
+          initialConfig={room.config}
           onCreateRoom={handleChengeConfig}
         >
           <Settings />

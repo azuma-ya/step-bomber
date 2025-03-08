@@ -36,16 +36,20 @@ export const ModeModalButton = ({
   children,
   onCreateRoom,
   text,
+  initialConfig,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     onCreateRoom: (config: Config) => void;
     text: string;
+    initialConfig?: Config;
   }) => {
   const isMobile = useIsMobile();
 
-  const [gridSize, setGridSize] = useState(7);
-  const [isVisibleBombs, setIsVisibleBombs] = useState(false);
+  const [gridSize, setGridSize] = useState(initialConfig?.gridSize ?? 7);
+  const [isVisibleBombs, setIsVisibleBombs] = useState(
+    initialConfig?.isVisibleBombs ?? false,
+  );
 
   if (isMobile) {
     return (
