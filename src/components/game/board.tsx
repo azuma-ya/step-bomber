@@ -125,9 +125,9 @@ export const Board = ({ G, ctx, moves, events, playerID }: Props) => {
 
   return (
     <section className="w-full h-full flex flex-col items-center justify-center p-4 gap-4">
-      <hgroup className="flex items-center gap-4 bg-background/50 p-4 rounded-lg">
+      <hgroup className="flex items-center gap-4 bg-background/50  rounded-lg">
         <div className="flex items-center gap-2">
-          <p className="text-lg font-bold">Current Turn:</p>
+          <p className="text-lg font-bold">Current Turn</p>
           <div
             className={cn(
               "w-6 h-6 rounded-full shadow-[-3px_3px_4px_0px_rgba(0,_0,_0,_0.2)]",
@@ -139,7 +139,7 @@ export const Board = ({ G, ctx, moves, events, playerID }: Props) => {
                 G.board.players[getPlayerID(ctx.currentPlayer)]?.color,
             }}
           />
-          <p className="text-lg">
+          <p className="text-base underline">
             {
               Object.values(room?.players ?? {}).find(
                 (player) => player.number.toString() === ctx.currentPlayer,
@@ -175,7 +175,7 @@ export const Board = ({ G, ctx, moves, events, playerID }: Props) => {
       <nav className="flex flex-col md:flex-row items-center gap-4 touch-none">
         <div className="flex items-center gap-4">
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             disabled={
               !myTurn || !G.players[getPlayerID(ctx.currentPlayer)].isPlaceable
@@ -185,9 +185,7 @@ export const Board = ({ G, ctx, moves, events, playerID }: Props) => {
                 myTurn &&
                 G.players[getPlayerID(ctx.currentPlayer)].isPlaceable
               ) {
-                moves.placeBomb(
-                  G.board.players[getPlayerID(ctx.currentPlayer)]!.position,
-                );
+                moves.placeBomb();
               }
             }}
           >

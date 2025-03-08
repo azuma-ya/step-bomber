@@ -13,7 +13,7 @@ import { auth, db, store } from "@/lib/firebase";
 import type { User } from "@/types/user";
 
 export const FirebaseSubscriber = () => {
-  const [authUser] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const setRooms = useData((state) => state.setRooms);
   const setUser = useData((state) => state.setUser);
   const onOpen = useAuthModal((state) => state.onOpen);
@@ -21,6 +21,7 @@ export const FirebaseSubscriber = () => {
 
   // Rooms subscription
   useEffect(() => {
+    if (!user) return;
     const unsubscribe = onValue(ref(db, "rooms"), (snapshot) => {
       const rooms = snapshot.val();
       setRooms(Object.values(rooms ?? {}));
@@ -29,28 +30,30 @@ export const FirebaseSubscriber = () => {
     return () => {
       unsubscribe();
     };
-  }, [setRooms]);
+  }, [setRooms, user]);
 
   // User subscription
   useEffect(() => {
-    if (!authUser?.uid) return;
+    if (!user) return;
 
     const unsubscribe = onSnapshot(
-      doc(store, "users", authUser.uid),
+      doc(store, "users", user.uid),
       (snapshot) => {
-        if (!snapshot.exists()) {
-          if (pathname === "/") return;
-          return onOpen();
-        }
-        const user = snapshot.data() as User;
-        setUser(user);
+        if (!snapshot.exists()) return;
+        const data = snapshot.data() as User;
+        setUser(data);
       },
     );
 
     return () => {
       unsubscribe();
     };
-  }, [authUser?.uid, setUser, onOpen, pathname]);
+  }, [user, setUser]);
+
+  useEffect(() => {
+    if (loading || pathname === "/") return;
+    if (!user) onOpen();
+  }, [loading, user, onOpen, pathname]);
 
   return null;
 };

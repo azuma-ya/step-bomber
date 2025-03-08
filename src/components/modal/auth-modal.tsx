@@ -3,9 +3,9 @@
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { auth, store } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signInAnonymously } from "firebase/auth";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { useTransition } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -35,7 +35,6 @@ const formSchema = z.object({
 
 export const AuthModal = () => {
   const { isOpen, onClose } = useAuthModal();
-  const [authUser] = useAuthState(auth);
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,17 +45,15 @@ export const AuthModal = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (!authUser) return;
-    const ref = doc(collection(store, "users"), authUser.uid);
     startTransition(async () => {
-      await setDoc(ref, {
-        id: authUser.uid,
+      const { user } = await signInAnonymously(auth);
+      await setDoc(doc(collection(store, "users"), user.uid), {
+        id: user.uid,
         name: values.name,
-        image: authUser.photoURL,
+        image: user.photoURL,
         points: 0,
       });
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      window.location.reload();
+      onClose();
     });
   };
 

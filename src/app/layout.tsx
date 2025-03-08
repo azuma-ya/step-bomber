@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 
 import { Footer } from "@/components/base/footer";
 import { Header } from "@/components/base/header";
-import { AuthProvider } from "@/providers/auth-provider";
 import { FirebaseSubscriber } from "@/providers/firebase-subscriber";
 import { ModalProvider } from "@/providers/modal-provider";
 import { SheetProvider } from "@/providers/sheet-provider";
@@ -40,18 +39,16 @@ export default function RootLayout({
       className="scroll-pt-(--header-height) scroll-smooth"
     >
       <body className={cn(notoSansJP.className, "antialiased")}>
-        <AuthProvider>
-          <FirebaseSubscriber />
-          <ThemeProvider>
-            <SheetProvider />
-            <ModalProvider />
-            <div className="min-h-screen">
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </div>
-          </ThemeProvider>
-        </AuthProvider>
+        <FirebaseSubscriber />
+        <ThemeProvider>
+          <SheetProvider />
+          <ModalProvider />
+          <div className="min-h-screen">
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

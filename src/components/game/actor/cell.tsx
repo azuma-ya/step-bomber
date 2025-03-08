@@ -17,7 +17,6 @@ export const Cell = ({ G, i, j, cell, isFire = false, playerID }: Props) => {
   const isBombed = bombs.find(
     (bomb) => bomb.position.row === i && bomb.position.col === j,
   );
-  console.log("🚀 ~ Cell ~  G.config.isVisibleBombs:", G.config.isVisibleBombs);
 
   return (
     <td

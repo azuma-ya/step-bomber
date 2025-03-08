@@ -7,13 +7,14 @@ import { push, ref, set } from "firebase/database";
 import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { IconSelectButton } from "@/components/icon-select";
 import { Container } from "@/components/layout/container";
 import { ModeModalButton } from "@/components/modal/mode-modal";
 import { RoomItem } from "@/components/room-item";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,18 +28,19 @@ import { Input } from "@/components/ui/input";
 import { useData } from "@/hooks/use-data";
 import { auth, db, store } from "@/lib/firebase";
 import type { Config } from "@/types/room";
+import { signInAnonymously } from "firebase/auth";
 
 const formSchema = z.object({
   name: z
     .string()
     .min(1, "ニックネームを入力してください")
     .max(20, "ニックネームは20文字以内で入力してください"),
+  image: z.string().optional(),
 });
 
 const App = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [authUser] = useAuthState(auth);
   const user = useData((state) => state.user);
   const rooms = useData((state) => state.rooms);
 
@@ -46,32 +48,35 @@ const App = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      image: "",
     },
   });
 
   useEffect(() => {
     form.setValue("name", user?.name ?? "");
+    form.setValue("image", user?.image ?? "");
   }, [user, form]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (!authUser) return;
-    const ref = doc(collection(store, "users"), authUser.uid);
     if (user) {
       startTransition(async () => {
-        await updateDoc(ref, {
+        await updateDoc(doc(collection(store, "users"), user.id), {
           name: values.name,
+          image: values.image,
         });
       });
       return;
     }
+
     startTransition(async () => {
-      await setDoc(ref, {
-        id: authUser.uid,
+      const { user } = await signInAnonymously(auth);
+      await setDoc(doc(collection(store, "users"), user.uid), {
+        id: user.uid,
         name: values.name,
-        image: authUser.photoURL,
+        image: user.photoURL,
         points: 0,
       });
-      window.location.reload();
+      router.refresh();
     });
   };
 
@@ -97,12 +102,41 @@ const App = () => {
   return (
     <Container className="h-[calc(100vh-var(--header-height)-var(--footer-height))] flex items-center justify-center flex-col gap-6 md:w-[350px]">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full flex gap-6 flex-col items-start"
+        >
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <IconSelectButton
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full size-min"
+                    onSelectIcon={(icon: string) => {
+                      field.onChange(icon);
+                    }}
+                  >
+                    <Avatar className="size-16">
+                      <AvatarImage src={field.value} />
+                      <AvatarFallback className="text-xl">
+                        {user?.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </IconSelectButton>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel>ニックネーム</FormLabel>
                 <FormControl>
                   <div className="flex gap-2 items-center">
@@ -129,6 +163,7 @@ const App = () => {
       <ul className="w-full space-y-1">
         {rooms
           ?.filter((room) => room.gameState.status === "waiting")
+          .slice(0, 5)
           .map((room) => (
             <li key={room.id}>
               <Link href={`/rooms/${room.id}`}>

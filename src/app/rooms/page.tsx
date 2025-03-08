@@ -10,6 +10,9 @@ const RoomListPage = () => {
   return (
     <div>
       <ul className="w-full space-y-2">
+        <p className="hidden last:block text-center my-8">
+          部屋は作成されていません...
+        </p>
         {rooms
           ?.filter((room) => room.gameState.status === "waiting")
           .map((room) => (
