@@ -37,12 +37,14 @@ export const ModeModalButton = ({
   onCreateRoom,
   text,
   initialConfig,
+  notChange = false,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     onCreateRoom: (config: Config) => void;
     text: string;
     initialConfig?: Config;
+    notChange?: boolean;
   }) => {
   const isMobile = useIsMobile();
 
@@ -73,12 +75,14 @@ export const ModeModalButton = ({
               setGridSize={setGridSize}
               isVisibleBombs={isVisibleBombs}
               setIsVisibleBombs={setIsVisibleBombs}
+              disabled={notChange}
             />
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
               <Button
                 onClick={() => onCreateRoom({ gridSize, isVisibleBombs })}
+                disabled={notChange}
               >
                 {text}
               </Button>
@@ -106,10 +110,14 @@ export const ModeModalButton = ({
           setGridSize={setGridSize}
           isVisibleBombs={isVisibleBombs}
           setIsVisibleBombs={setIsVisibleBombs}
+          disabled={notChange}
         />
         <DialogFooter>
           <DialogClose asChild>
-            <Button onClick={() => onCreateRoom({ gridSize, isVisibleBombs })}>
+            <Button
+              onClick={() => onCreateRoom({ gridSize, isVisibleBombs })}
+              disabled={notChange}
+            >
               {text}
             </Button>
           </DialogClose>
@@ -124,11 +132,13 @@ const Form = ({
   setGridSize,
   isVisibleBombs,
   setIsVisibleBombs,
+  disabled,
 }: {
   gridSize: number;
   setGridSize: (gridSize: number) => void;
   isVisibleBombs: boolean;
   setIsVisibleBombs: (isVisibleBombs: boolean) => void;
+  disabled: boolean;
 }) => {
   return (
     <div className="space-y-4">
@@ -143,6 +153,7 @@ const Form = ({
           <Slider
             className="flex-1"
             defaultValue={[gridSize]}
+            disabled={disabled}
             max={11}
             min={5}
             step={2}
@@ -154,6 +165,7 @@ const Form = ({
         <Label>自分の爆弾の表示</Label>
         <div className="flex items-center justify-between gap-2">
           <Switch
+            disabled={disabled}
             checked={isVisibleBombs}
             onCheckedChange={setIsVisibleBombs}
           />

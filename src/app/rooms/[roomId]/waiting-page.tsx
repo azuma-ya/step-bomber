@@ -98,12 +98,13 @@ const WaitingPage = ({ room, onStart, isPending }: Props) => {
           Start
         </Button>
         <ModeModalButton
-          disabled={isPendingConfig || room.host !== user?.id}
+          disabled={isPendingConfig}
           variant="outline"
           size="icon"
-          text="変更する"
+          notChange={room.host !== user?.id}
+          text={room.host !== user?.id ? "ホストのみ変更できます" : "変更する"}
           initialConfig={room.config}
-          onCreateRoom={handleChengeConfig}
+          onCreateRoom={room.host !== user?.id ? () => {} : handleChengeConfig}
         >
           <Settings />
         </ModeModalButton>
