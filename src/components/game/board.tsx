@@ -68,9 +68,7 @@ export const Board = ({ G, ctx, moves, events, playerID }: Props) => {
           events.endTurn?.();
           break;
         case " ":
-          moves.placeBomb(
-            G.board.players[getPlayerID(ctx.currentPlayer)]!.position,
-          );
+          moves.placeBomb();
           break;
       }
     };
@@ -121,7 +119,7 @@ export const Board = ({ G, ctx, moves, events, playerID }: Props) => {
       removeEventListener("touchstart", handleTouchStart);
       removeEventListener("touchend", handleTouchEnd);
     };
-  }, [G, ctx, moves, events]);
+  }, [moves, events]);
 
   return (
     <section className="w-full h-full flex flex-col items-center justify-center p-4 gap-4">

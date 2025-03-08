@@ -2,7 +2,6 @@ import type { Game as BoardGameIOGame } from "boardgame.io";
 import { PlayerView } from "boardgame.io/core";
 
 import { PlayerID, getPlayerID } from "@/types/player";
-import type { Position } from "@/types/position";
 import { type BoardState, movePlayer } from "./board";
 import { type Bomb, activateBombs, checkBombFire, placeBomb } from "./bomb";
 
@@ -47,8 +46,12 @@ export const createGame = ({
       checkBombFire(G);
       G.moveCount++;
     },
-    placeBomb: ({ G, playerID }, position: Position) => {
-      placeBomb(G, getPlayerID(playerID), position);
+    placeBomb: ({ G, playerID }) => {
+      placeBomb(
+        G,
+        getPlayerID(playerID),
+        G.board.players[getPlayerID(playerID)].position,
+      );
     },
   },
 
