@@ -28,8 +28,6 @@ import { useData } from "@/hooks/use-data";
 import { auth, db, store } from "@/lib/firebase";
 import type { Config } from "@/types/room";
 
-export const runtime = "edge";
-
 const formSchema = z.object({
   name: z
     .string()

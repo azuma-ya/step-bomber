@@ -20,8 +20,12 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "Step Bunmer",
+  title: "Step Bomber",
   description: "心理ボードゲーム。爆弾を設置して相手に踏ませよ！",
+  openGraph: {
+    title: "Step Bomber",
+    description: "心理ボードゲーム。爆弾を設置して相手に踏ませよ！",
+  },
 };
 
 export default function RootLayout({

@@ -1,11 +1,8 @@
 "use client";
 
-import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
+import { RoomItem } from "@/components/room-item";
 import { useData } from "@/hooks/use-data";
-
-export const runtime = "edge";
+import Link from "next/link";
 
 const RoomListPage = () => {
   const rooms = useData((state) => state.rooms);
@@ -17,9 +14,9 @@ const RoomListPage = () => {
           ?.filter((room) => room.gameState.status === "waiting")
           .map((room) => (
             <li key={room.id}>
-              <Button variant="outline" className="w-full" asChild>
-                <Link href={`/rooms/${room.id}`}>{room.id}</Link>
-              </Button>
+              <Link href={`/rooms/${room.id}`}>
+                <RoomItem data={room} />
+              </Link>
             </li>
           ))}
       </ul>

@@ -10,8 +10,6 @@ import { useParams, useRouter } from "next/navigation";
 import PlayingPage from "./playing-page";
 import WaitingPage from "./waiting-page";
 
-export const runtime = "edge";
-
 const RoomIdPage = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();

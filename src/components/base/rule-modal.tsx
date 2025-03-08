@@ -22,8 +22,8 @@ export const RuleModal = () => {
       </DialogTrigger>
       <DialogContent className="max-w-full rounded-sm">
         <DialogHeader>
-          <DialogTitle>Step Bommer Rule</DialogTitle>
-          <DialogDescription>This is rule of Step Bommer</DialogDescription>
+          <DialogTitle>Step Bomber Rule</DialogTitle>
+          <DialogDescription>This is rule of Step Bomber</DialogDescription>
         </DialogHeader>
         <div className="markdown">
           <Rule />
